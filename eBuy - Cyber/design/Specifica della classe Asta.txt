@@ -43,6 +43,16 @@ ultimo_bid(i: datetime): Bid | None
 			max_b = b
 	return max_b
 
+# ottimizzata
+ultimo_bid(i:datetime): Bid | None
+	max_b = None
+	per ogni l in this.asta_bid:
+		se l.bid.istante <= i:
+			se l.bid.istante > max_b.istante OR max_b = None:
+				max_b = b
+	return max_b
+
+
 
 vincitore(): Utente[0..1]
 	precondizioni: this.conclusa() è true.
