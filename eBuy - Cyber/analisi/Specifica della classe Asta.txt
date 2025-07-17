@@ -1,0 +1,39 @@
+Specifica della classe Asta
+
+[V.Asta.scadenzaDopoPubblicazione] La scadenza dell'asta deve essere successiva alla sua pubblicazione.
+
+Per ogni a:Asta deve essere a.scadenza > a.pubblicazione.
+
+
+prezzo(i: DataOra): Reale >= 0
+	precondizioni:
+	postcondizioni:
+		- L'operazione non modifica il livello estensionale dei dati
+		- Dato l'insieme B delle istanze della classe Bid coinvolti in link d'associazione asta_bid con this che hanno come valore per l'attributo istante minore di "i". Formalmente:
+			Sia B l'insieme dei b:Bid coinvolti in (this,b):asta_bid, con b.istante <= i.
+		- Sia N il numero di elementi B (ovvero la cardinalità di B, |B|)
+		- result = N * this.prezzo_bid + this.prezzo
+
+
+conclusa(): Booleano
+	precondizioni: nessuna.
+	postcondizioni:
+		- Non ha side effect.
+		- Se adesso > this.scadenza, result = true
+		- Altrimenti result = false
+
+
+ultimo_bid(i: DataOra): Bid[0..1]
+	precondizioni: nessuna.
+	postcondizioni:
+		- Non ha side effect.
+		- Sia B l'insieme dei b:Bid coinvolti in asta_bid con this, tali che b.istante <= i.
+					B = {b1, b2, b3, ...., bn}
+		- result è il b in B con b.istante maggiore.
+
+
+vincitore(): Utente[0..1]
+	precondizioni: this.conclusa() è true.
+	postcondizioni:
+		- b = this.ultimo_bid(adesso)
+		- result è il p:Privato tale che sia coinvoilto in un link di associazione bid_ut con b.

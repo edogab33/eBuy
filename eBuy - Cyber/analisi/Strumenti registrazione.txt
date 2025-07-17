@@ -1,0 +1,18 @@
+Specifica dello use case Strumenti registrazione
+
+registra_utente_privato(username: Stringa): Privato
+	precondizioni: non esiste un u:Utente tale che u.username sia uguale a username.
+	postcondizioni:
+		- Crea e restituisci l'oggetto u:Privato e assegna:
+			- u.username = username
+			- u.registrazione = adesso
+
+
+registrazione_venditore(u: Stringa, l:URL): VenditoreProfessionale
+	precondizioni:
+		- non esiste alcun oggetto di classe Utente con valore "u" per l'attributo username.
+	postcondizioni:
+		- viene creato e restituiro v:VenditoreProfessionale tale che:
+			- v.username = u
+			- v.registrazione = adesso
+			- v.vetrina = l

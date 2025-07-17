@@ -1,0 +1,62 @@
+Raffinamento dei requisiti
+
+1. Degli utenti interessa:
+	1.1. Username (stringa, univoca)
+	1.2. Istante di registrazione (dataora)
+	1.3. Post pubblicati (v.req. 3)
+	1.4. Se è un venditore professionale:
+		1.4.1. URL vetrina
+		1.4.2. I post pubblicati (v.req. 3)
+	1.5. Se è un utente privato:
+		1.5.1. Gli oggetti comprati in modalita "compralo subito" (v.req. 3.2)
+		1.5.2. I bid proposti (v.req. 4)
+		1.5.3. La popolarità, calcolata come:
+			- La somma tra il numero di utenti che hanno fatto bid sulle loro aste e il numero di utenti che hanno acquistato in modalita compralo subito i loro oggetti (tutto negli ultimi 12 mesi)
+	1.6. L'affidabilita, calcolata come:
+		- m*(1-z)/5 dove:
+			- "m" è la media artitmetica dei feedback
+			- z = FN/FT dove FN è il num. di feedback negativi e FT è il num. di feedback totali
+			- dove i feedback negativi sono quelli che hanno voto <= 2.
+
+2. Degli oggetti in vendita interessa:
+	2.1. Descrizione
+	2.2. La categoria di cui interessa:
+		2.2.1. Le sottocategorie
+		2.2.2. Ricavare dalla categoria tutte le sottocategorie
+	2.3. Se nuovo:
+		2.3.1. Numero anni garanzia (Intero >= 2)
+	2.4. Se usato:
+		2.4.1. Numero anni garanzia (Intero >= 0)
+		2.4.2. Condizione (ottimo, buono, discreto, da sistemare)
+
+3. Dei post ci interessa:
+	3.1. Se asta interessa:
+		3.1.1. Prezzo iniziale (reale >= 0)
+		3.1.2. Prezzo per ogni bid (reale > 0)
+		3.1.3. Istante scadenza (dataora)
+		3.1.4. I bid (v.req. 4)
+		3.1.5. Il vincitore (v.req. 1)
+		3.1.6. Il prezzo relativo (calcolabile)
+		3.1.7. L'ultimo bid (v.req. 4)
+	3.2. Se "CompraloSubito":
+		3.2.1. Prezzo (reale >= 0)
+		3.2.2. L'utente che per primo ha acquistato l'oggetto (v.req. 2)
+	3.3. Metodi di pagamento accettati (bonifico o carta di credito)
+	3.4. I feedback, di cui interessa:
+		3.4.1. Un voto (intero tra 0 e 5)
+		3.4.2. Un commento testuale (opzionale)
+
+4. Dei bid ci interessa:
+	4.1. Istante (dataora)
+	4.2. Il bidder (v.req. 1)
+	4.3. L'asta (v.req. 3)
+	4.4. Il prezzo del bid
+
+
+999. Il sistema deve offrire le seguenti funzionalità:
+	x999.1. Agli utenti deve permetter di pubblicare post per oggetti in vendita con o senza asta
+	x999.2. Agli utenti deve permettere di acquistare oggetti in modalità compralo subito oppure di proporre bid alle aste
+	x999.3. Agli utenti non registrati, di registrarsi.
+	x999.4. Agli amministratori, di creare categorie.
+	x999.5. Calcolare affidabilita e popolarita.
+	x999.6. Lasciare feedback a post acquistati.

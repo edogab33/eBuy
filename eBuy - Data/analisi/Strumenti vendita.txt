@@ -1,0 +1,40 @@
+Specifica dello use case Strumenti vendita
+
+pubblica_post(
+	d: Stringa,
+	anni_garanzia: Intero >= 0,
+	prezzo: Reale >= 0,
+	condizioni: Condizioni [0..1],
+	mp: MetodoPagamento [1..*],
+	cat: Categoria,
+	scadenza: DataOra [0..1],
+	prezzo_rialzo: Reale > 0 [0..1],
+): OggettoDelPost
+	precondizioni:
+		- Se condizioni è valorizzato allora anni_garanzia >= 2
+		- Se l'oggetto associato all'attore che invoca l'operazione è di classe UtentePrivato, allora condizioni è valorizzato
+		- scadenza > adesso
+		- scadenza è valorizzato se e solo se prezzo rialzo è valorizzato
+	postcondizioni:
+		- Crea l'oggetto op di classe OggettoDelPost:
+			- op.descrizione = d
+			- op.anni_garanzia = anni_garanzia
+			- op.prezzo = prezzo
+			- op.pubblicazione = adesso
+		- Se condizioni è valorizzato:
+			- op è un oggetto di classe Usato (in breve, op:Usato)
+		- Altrimenti (condizioni non è valorizzato):
+			- op è un oggetto di classe PostOggNuovo (in breve, op:PostOggNuovo)
+		- Per ogni m in mp crea un link met_post che coinvolge op e ogni m
+		- Crea il link cat_ogg che coinvolge op e cat.
+		- Se l'oggetto u associato all'attore che invoca l'operazione è di classe UtentePrivato, crea il link us_ut tra u e op.
+		- Altrimenti se l'oggetto v associato all'attore che invoca l'operazione è di classe VenditoreProfessionale, crea il link pubblica tra v e op.
+		- Se scadenza è valorizzato, crea op:Asta:
+			- op.scadenza = scadenza
+			- op.prezzo_rialzo = prezzo_rialzo
+		- Altrimenti, crea op:CompraSubito
+		- result = op
+
+
+
+

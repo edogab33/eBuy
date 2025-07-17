@@ -1,0 +1,38 @@
+Specifica dei vincoli esterni
+
+[V.PrivatoBid.istanteMaggioreDiRegistrazione] Gli utenti devono registrarsi prima di proporre bid.
+
+Per ogni b:Bid sia u:Privato tale che (b,u):bid_ut allora deve essere che b.istante > u.registrazione.
+
+
+[V.AstaBid.istanteTraPubblicazioneScadenza] L'istante dei bid devono essere tra la pubblicazione e la scadenza dell'asta.
+
+Per ogni b:Bid sia a:Asta tale che (a,b):asta_bid deve essere che a.pubblicazione < b.istante < a.scadenza.
+
+
+[V.PostOggettoUtente.pubblicazioneMinoreRegistrazione] Un post deve essere pubblicato da un utente già registrato.
+
+Per ogni p:PostOggetto sia u:VenditoreProf tale che (u,p):pubblica deve essere che p.pubblicazione > u.registrazione.
+
+
+[V.PostOggettoVenditoreProf.nonPreRegistrazione] I venditori non possono pubblicare post prima di essere registrati.
+
+Per ogni VenditoreProf e PostOggetto coinvolti in un link di associazione pubblica deve essere che registrazione di VenditoreProf < pubblicazione di PostOggetto.
+
+Per ogni istanza v di VenditoreProf e di p PostOggetto coinvolti in un link di associazione pubblica deve essere che v.registrazione < p.pubblicazione.
+
+Per ogni v:VenditoreProf sia p:PostOggetto tale che (v,p):pubblica allora deve essere che v.registrazione < p.pubblicazione.
+
+
+[V.CompraloSubitoPrivato.acquistoMaggiorePubblicazione] L'istante di acquisto di un post in modalità "compralo subito" deve essere maggiore della pubblicazione del post.
+
+Per ogni p:CompraloSubito sia ut:Privato tale che (p,ut):cs_ut deve essere vero che (p,ut).istante > p.pubblicazione.
+
+
+[V.PostConFeedbackAstaCompraloSubito.feedbackValido] I post possono avere feedback solo dopo che il post in modalità "compralo subito" è stato acquistato oppure, se è un'asta, dopo che questa è scaduta ed è stata vinta da qualcuno (cioè, se c'è almeno un bid).
+
+Per ogni pf:PostConFeedback:
+	- Se pf:CompraloSubito, sia u:Privato deve essere (pf,u):cs_ut tale che (pf,u).istante < pf.istante.
+	- Se pf:Asta, deve essere pf.scadenza < adesso e esiste b:Bid tale che (pf,b):asta_bid.
+
+

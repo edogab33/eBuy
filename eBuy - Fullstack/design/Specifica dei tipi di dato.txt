@@ -1,0 +1,7 @@
+Specifica dei tipi di dato
+
+Condizione: {ottimo, buono, discreto, da sistemare}
+
+URL: Stringa secondo standard
+
+Popolarita: {Bassa, Media, Alta}

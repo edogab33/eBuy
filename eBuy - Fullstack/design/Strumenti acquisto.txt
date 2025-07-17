@@ -1,0 +1,37 @@
+Specifica dello use case Strumenti acquisto
+
+acquista_comparlosubito(cs: CompraloSubito): cs_ut			// req. 999.2
+	precondizioni:
+		- Non esiste già un link cs_ut che coinvolge un qualsiasi u:Privato e cs
+	postcondizioni:
+		- Crea e restituisce il link cs_ut che coinvolge l'attore che invoca l'operazione (u) e cs, con (cs,u).istante = adesso.
+
+
+nuovo_bid(a: Asta): bid_ut									// req. 999.2
+	precondizioni:
+		- a.conclusa() deve restituire false
+		- non esiste un b:Bid tale che (a,b):asta_bid e b.istante == adesso
+	postcondizioni:
+		- Sia p:Privato l'oggetto associato all'attore che invoca l'operazione.
+		- crea b:Bid tale che b.istante = adesso.
+		- crea (a,b):asta_bid.
+		- crea (b,p):bid_ut.
+		- result = b
+
+
+lascia_feeback(po: PostOggetto, voto: 0..5, commento: Stringa [0..1]): PostConFeedback		// req. 999.3
+	precondizioni:
+		- Se po è istanza della classe Asta:
+			- il valore di ritorno di po.vincitore() è uguale all'oggetto associato all'attore che invoca l'operazione.
+		- Se po è istanza della classe CompraloSubito:
+			- Sia p:Privato l'oggetto associato all'attore che invoca l'operazione, deve esistere (po, p):cs_ut.
+	postcondizioni:
+		- po diventa istanza di PostConFeedback
+		- po.voto = voto
+		- po.commento = commento (se valorizzato)
+		- po.istante = adesso
+		- result = po
+
+
+
+

@@ -1,0 +1,30 @@
+Specifica della classe Utente
+
+popolarita(i: DataOra): Popolarita
+	precondizioni: nessuna.
+	postcondizioni:
+		- Non ha side effect.
+		- Sia C l'insieme dei c:CompraloSubito coinvolti in (this,c):pubblica o in (this,c):us_ut (C è l'insieme dei post compralo subito pubblicati da this).
+		- Sia Ucs l'insieme degli u:UtentePrivato coinvolti in (u,c):cs_ut dove c in C e i - 12 mesi <= (u,c).istante <= i (Ucs è l'insieme degli utenti privati che hanno acquistato gli oggetti in nell'insieme C negli ultimi 12 mesi).
+		- Sia A l'insieme delle a:Asta coinvolte in (this,a):pubblica o in (this,a):us_ut (A è l'insieme delle aste pubblicate da this).
+		- Sia Ua l'insieme degli u:UtentePrivato coinvolti in (b,u):bid_ut e (a,b):asta_bid con un qualsiasi oggetto b di classe Bid (b:Bid) tale che i - 12 mesi <= b.istante <= i e dove a in A (Ua è l'insieme degli utenti privati che hanno effettuato bid sulle aste nell'insieme A negli ultimi 12 mesi).
+			- Alternativamente, la definizione di Ua si può riscrivere così:
+				Sia Ua l'insieme degli oggetti u di classe UtentePrivato coinvolti in almeno un link di associazione bid_ut con un oggetto b di classe Bid tale che b è coinvolto in un link di associazione asta_bid con un qualsiasi oggetto a di classe Asta appartenente all'insieme A e dove i - 12 mesi <= b.istante <= i.
+		- tot = |Ua| + |Ucs|
+		- Se tot < 50, result = bassa
+		- Se 50 < tot < 300, result = media
+		- Se tot > 300, result = alta
+
+
+affidabilita(i: DataOra): Reale in [0..1]
+	precondizioni: 
+		- Sia PF l'insieme dei pf:PostConFeedBack, tali che:
+			- (this,pf):pubblica oppure (this,pf):us_ut e
+			- pf.istante <= i.
+		PF deve essere diverso da vuoto.
+	postcondizioni:
+		- Non ha side effect.
+		- Sia FT = |PF| e sia S la somma dei pf.voto dei pf in PF, m = S/FT.
+		- Sia PFN l'insieme dei pf in PF tali da avere pf.voto <= 2.
+		- Sia FN = |PFN|, z = FN/FT.
+		- result = m*(1-z)/5.

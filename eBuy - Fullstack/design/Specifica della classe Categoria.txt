@@ -1,0 +1,10 @@
+Specifica della classe Categoria
+
+[V.Categoria.noCicli] L'albero delle sottocategorie non deve formare cicli.
+
+Per ogni c[1],c[2],...,c[n] così definiti:
+	- (c[1],c[2]):sottocategoria
+	- (c[2],c[3]):sottocategoria
+	- ...
+	- (c[n-1],c[n]):sottocategoria
+Non deve esistere (c[n],c[1]):sottocategoria

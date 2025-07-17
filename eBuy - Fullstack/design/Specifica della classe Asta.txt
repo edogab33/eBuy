@@ -1,0 +1,49 @@
+Specifica della classe Asta
+
+[V.Asta.scadenzaDopoPubblicazione] La scadenza dell'asta deve essere successiva alla sua pubblicazione.
+
+Per ogni a:Asta deve essere vero a.pubblicazione <= a.scadenza.
+
+Equivalente:
+Non esiste a:Asta tale che a.scadenza <= a.pubblicazione.
+
+Poco più informale:
+Per ogni istanza a di Asta deve essere vero che a.pubblicazione è minore o uguale a a.scadenza.
+
+
+prezzo(i: DataOra): Reale >= 0
+	precondizioni:
+	postcondizioni:
+		- L'operazione non modifica il livello estensionale dei dati
+		- Sia B l'insieme delle istanze b:Bid coinvolte in un link di associazione asta_bid insieme a this "(this,b)" tali da avere b.istante non successivo al valore di i. Formalmente:
+			Sia B l'insieme delle istanza b:Bid tali che (this,b):asta_bid e b.istante <= i.
+		- Sia N il numero di elementi di B (cioè la cardinalità di B, denotata anche come |B|)
+		- result = N * this.prezzo_bid + this.prezzo
+
+
+conclusa(): Booleano
+	precondizioni: nessuna.
+	postcondizioni:
+		- Non ha side effect.
+		- Se this.scadenza <= adesso result è true.
+		- Altrimenti result è flase.
+
+
+ultimo_bid(): Bid[0..1]
+	precondizioni: nessuna.
+	postcondizioni:
+		- Non ha side effect
+		- Sia B l'insieme dei b:Bid coinvolti in un link asta_bid di associazione tra b e this, prendo solo i b.istante <= adesso.
+		- result è il bid nell'insieme B con valore dell'attributo istante maggiore.
+
+
+vincitore(): Privato[0..1]
+	precondizioni: il risultato dell'operazione this.conclusa() deve essere true.
+	postcondizioni:
+		- Non ha side effect.
+		- b = this.ultimo_bid()
+		- result è p:Privato coinvolto nel link bid_ut di associazione con b.
+
+
+
+

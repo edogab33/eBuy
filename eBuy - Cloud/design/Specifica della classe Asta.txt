@@ -1,0 +1,38 @@
+Specifica della classe Asta
+
+[V.Asta.scadenzaDopoPubblicazione] La scadenza dell'asta deve essere dopo la sua pubblicazione.
+
+Per ogni oggetto della classe Asta deve essere vero che pubblicazione < scadenza.
+
+Più formalmente:
+Per ogni a:Asta deve essere a.pubblicazione < a.scadenza.
+
+Equivalentemente:
+Non esiste a:Asta tale che a.pubblicazione > a.scadenza.
+
+
+prezzo(i: DataOra): Reale >= 0
+	precondizioni: nessuna.
+	postcondizioni:
+		- L'operazione non modifica il livello estensionale dei dati
+		- Sia B l'insieme dei bid fatti a this fino ad i, formalmente:
+			B è l'insieme dei b:Bid tali che (this,b):asta_bid e b.istante <= i.
+		- Sia N il numero di elementi di B (formalmente, la cardinalità, |B|).
+		- result = this.prezzo + N * this.prezzo_bid
+
+# traduzione 1 ad 1 della specifica di analisi
+ultimo_bid(i: datetime): Bid | None
+	se |this.asta_bid| == 0: return None
+	B = {}
+	per ogni l in this.asta_bid:
+		se l.bid.istante <= i:
+			B.add(l.bid)
+
+	max_b = B[0]
+	per ogni b in B:
+		se b.istante > max_b.istante:
+			max_b = b
+
+	return max_b
+
+

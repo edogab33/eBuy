@@ -1,0 +1,33 @@
+Specifica dei vincoli esterni
+
+[V.Utente.registrDopoPubblicazione] Un utente non può pubblicare post prima della sua registrazione.
+
+Per ogni u:Utente, sia o:OggettoDelPost tale che (u,o):pubblica, deve essere o.pubblicazione > u.registrazione.
+
+
+[V.UtentePrivato.selfAcquisto] Gli utenti privati non possono acquistare oggetti venduti da loro in modalita CompraSubito.
+
+Per ogni u:UtentePrivato sia p:OggettoDelPost tale che p.is_nuovo = False, (u,p):pubblica e p:CompraSubito, non deve esistere (u,p):cs_ut.
+
+
+[V.UtentePrivato.selfBid] Gli utenti privati non possono fare bid sulle aste pubblicate da loro.
+
+Per ogni u:UtentePrivato sia p:OggettoDelPost con p.is_nuovo = False e b:Bid tale che (u,p):pubblica, p:Asta e esiste (p,b):asta_bid, non deve essere (b,p):bid_ut.
+
+
+[V.cs_utCompraloSubito.acquistoDopoPubblicazione] L'istante di acquisto in modalita compralo subito deve essere maggiore della sua pubblicazione.
+
+Per ogni istanza cs della classe CompraSubito tale che esiste l'istanza del link cs_ut dove cs partecipa, deve essere vero che il valore dell'attributo pubblicazione di cs è minore al valore dell'attributo istante di cs_ut.
+
+
+[V.OggettoDelPostVenditoreProfessionale.fusioneNuovoUsato]
+Per ogni o:OggettoDelPost, deve essere:
+	1. Se o.is_nuovo = True allora o.prezzo deve essere di tipo IntGET.
+	2. o.is_nuovo = False se e solo se o.condizioni è valorizzato.
+	3. Sia u:UtentePrivato, se (u,o):pubblica allora o.is_nuovo = false.
+
+
+[V.FeedbackOggettoDelPost.postTerminato]
+Per ogni o:OggettoDelPost esiste f:Feedback tale che (f,o):feed_post solo se:
+	- o.conclusa() e esiste almeno un b:Bid tale che (o,b):asta_bid, oppure
+	- sia u:UtentePrivato, esiste (o,u):cs_ut.

@@ -1,0 +1,33 @@
+Specifica dei vincoli esterni
+
+[V.PrivatoCompraloSubito.nonSelfAcquisto] Un utente privato non può acquistare oggetti in modalita compralo subito venduti da lui.
+
+Non esiste u:Privato e p:CompraloSubito tale che (u,p):cs_ut e (u,p):pubblica.
+
+Equivalente:
+Per ogni u:Privato sia p:CompraloSubito tale che (u,p):pubblica non esiste (u,p):cs_ut.
+
+
+[V.UtentePostOggetto.pubblDopoRegistrazione] Un utente non può avere post pubblicati prima della sua registrazione.
+
+Non esiste u:Utente e p:PostOggetto tale che:
+	- (p,u):pubblica e
+	- u.registrazione > p.pubblicazione.
+
+
+[V.BidAsta.istanteTraPubblicazioneScadenza] Un bid può essere proposto solo ad aste in corso.
+
+Per ogni b:Bid sia a:Asta tale che (a,b):asta_bid, deve essere b.istante <= a.scadenza e b.istante >= a.pubblicazione.
+
+
+[V.cs_utCompraloSubito.pubblicazioneMinoreScadenza] Un post di tipo compralo subito non può essere acquistato prima della sua pubblicazione.
+
+Per ogni istanza p:CompraloSubito sia ut:Privato tale che (p,ut):cs_ut, deve essere (p,ut).istante > p.pubblicazione.
+
+
+[V.VenditoreProfPostOggetto.pubblicazioneMaggioreRegistrazione] I venditori professionali non possono pubblicare post prima di essere registrati.
+
+Per ogni v:VenditoreProf e po:PostOggetto coinvolti in un link d'associazione post_ut, deve essere po.pubblicazione < v.registrazione.
+
+
+

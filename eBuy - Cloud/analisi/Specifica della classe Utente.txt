@@ -1,0 +1,24 @@
+Specifica della classe Utente
+
+affidabilita(i: DataOra): Reale in 0..1
+	precondizioni:
+		- Sia PF l'insieme dei pf:PostConFeedback tali che sono coinvolti con this nel link di associazione pubblica oppure priv_ou e che hanno pf.istante <= i. PF deve avere almeno un elemento.
+	postcondizioni:
+		- Non ha side effect.
+		- Sia S la somma dei pf.voto tali che pf in PF.
+		- Sia FT la cardinalità di PF.
+		- m = S/FT
+		- Sia PFN l'insieme dei pf in PF tali che pf.voto <= 2.
+		- Sia FN la cardinalità PFN.
+		- z = FN/FT.
+		- result = m*(1-z)/5
+
+
+popolarita(i: DataOra): Popolarita
+	precondizioni:
+	postcondizioni:
+		- Sia P l'insieme dei post pubblicati da this, formalmente:
+			tutti i p:PostOggetto che partecipano a pubblica o priv_ou insieme a this.
+		- Sia Ucs l'insieme degli u:Privato tali che partecipano a cs_ut insieme ai p in P dove l'istante di cs_ut è compreso tra i - 12 e i.
+		- Sia Ua l'insieme degli u:Privato, sia b:Bid tale che (b,u):bid_ut, deve essere che (b,p):asta_bid dove p in P e i - 12 <= b.istante <= i.
+		- result = |Ucs| + |Ua|

@@ -1,0 +1,9 @@
+Specifica dello use case Moderazione
+
+cancella_post(p:PostOggetto)
+	precondizioni:
+		- se p:Asta, non deve esistere un b:Bid tale che (p,b):asta_bid (non ci sono già bid)
+		- se p:CompraloSubito, non deve esistere up:UtentePrivato tale che (p,up):cs_ut (non è stato già acquistato)
+	postcondizioni:
+		- sia u:Utente l'oggetto coinvolto in (p,u):pubblica oppure in (p,u):us_ut
+		- Vengono eliminati dal sistema (p,u):pubblica oppure (p,u):us_ut e p

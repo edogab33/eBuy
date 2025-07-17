@@ -1,0 +1,52 @@
+Specifica della classe Asta
+
+[V.Asta.pubblicazioneMinoreScadenza] L'istante di pubblicazione dell'asta non puo essere maggiore della sua scadenza.
+
+Per ogni oggetto a:Asta siano d1 il valore dell'attributo "pubblicazione" e d2 il valore dell'attributo "scadenza", deve essere vero che d2 > d1.
+
+Piu formalmente:
+Per ogni a:Asta deve essere a.scadenza > a.pubblicazione.
+
+
+prezzo(i: DataOra): Reale >= 0
+	precondizioni: nessuna.
+	postcondizioni:
+		- L'operazione non modifica il livello estensionale dei dati.
+		- Sia A l'insieme dei b:Bid che partecipano a link di associazione asta_bid insieme a this e hanno un valore per l'attributo istante minore di "i", formalmente:
+			Sia A l'insieme dei b:Bid tali che (this,b):asta_bid e b.istante < i.
+		- Sia p il valore dell'attributo prezzo di this
+		- Sia r il valore dell'attributo prezzo_rialzo di this
+		- Sia n il numero di elementi in A (cioè, la cardinalità dell'insieme, anche scritto |A|)
+		- result = n * r + p
+
+
+# traduzione 1 a 1 rispetto alla specifica di analisi
+ultimo_bid(i: datetime): Bid | None
+	A = {}
+	per ogni l in this.asta_bid:
+		se l.bid.istante <= i:
+			A.add(l.bid)
+	se |A| == 0: result None
+	
+	max_b = A[0]
+	per ogni b in A:
+		se b.istante > max_b.istante:
+			max_b = b
+
+	return max_b
+
+# versione ottimizzata (per casa)
+[...]
+
+
+conclusa(): bool
+	se this.scadenza <= adesso:
+		return True
+	return False
+
+
+vincitore(): UtentePrivato | None
+	se this.conclusa() == False: return None
+	b = this.ultimo_bid(datetime.now())
+	return b.bid_ut.privato
+

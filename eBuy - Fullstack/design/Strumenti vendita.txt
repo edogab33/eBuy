@@ -1,0 +1,38 @@
+Specifica dello use case Strumenti vendita
+
+pubblica_post(
+		prezzo: Reale >= 0,
+		descrizione: Stringa,
+		anni_garanzia: Intero >= 0,
+		is_nuovo: Booleano,
+		condizione: Condizione [0..1],
+		is_asta: Booleano,
+		scadenza: DataOra [0..1],
+		prezzo_bid: Reale > 0 [0..1]
+	) : PostOggetto
+	precondizioni:
+		- Se is_nuovo = true allora anni_garanzia > 1
+		- Se is_nuovo = false, allora condizione deve essere valorizzato
+		- Se condizione è valorizzato, allora is_nuovo = false
+		- Se l'attore che invoca l'operazione è associato a un oggetto di classe Privato, allora is_nuovo = false
+		- is_asta = true se e solo se scadenza è valorizzato
+		- Se is_asta = true se e solo se prezzo_bid è valorrizzato
+		- Se is_asta = false allora prezzo > 0
+		- scadenza > adesso
+	postcondizioni:
+		- Crea l'oggetto po:PostOggetto e assegna:
+			- po.descrizione = descrizione
+			- po.pubblicazione = adesso
+			- po.prezzo = prezzo
+			- po.anni_garanzia = anni_garanzia
+		- Se is_asta = true:
+			- po:Asta
+			- po.scadenza = scadenza
+			- po.prezzo_bid = prezzo_bid
+		- Altrimenti (is_asta = false):
+			- po:CompraloSubito
+		- Se is_nuovo = false:
+			- po.condizione = condizione
+		- Se l'attore che invoca l'operazione di use case è di classe p:Privato allora crea il link (p,po):priv_ou.
+		- Altrimenti (l'attore è di classe p:VenditoreProf) allora crea il link (p,po):pubblica.
+		- restituisci po.

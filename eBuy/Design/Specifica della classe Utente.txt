@@ -1,0 +1,24 @@
+Specifica della classe Utente
+
+popolarita(i: DataOra): Popolarita
+	precondizioni: nessuna.
+	postcondizioni:
+		- Non ha side effect.
+		- Sia C l'insieme dei c:CompraloSubito coinvolti in (this,c):pubblica (C è l'insieme dei post compralo subito pubblicati da this).
+		- Sia Ucs l'insieme degli u:UtentePrivato coinvolti in (u,c):cs_ut dove c in C e i - 12 mesi <= (u,c).istante <= i.
+		- Sia A l'insieme delle a:Asta coinvolte in (this,a):pubblica.
+		- Sia Ua l'insieme degli u:UtentePrivato, sia b:Bid, coinvolti in (b,u):bid_ut e (a,b):asta_bid dove a in A.
+		- tot = |Ua| + |Ucs|
+		- Se tot < 50, result = bassa
+		- Se 50 < tot < 300, result = media
+		- Se tot > 300, result = alta
+
+
+affidabilita(i: DataOra): Reale in [0..1]
+	precondizioni: Sia PF l'insieme dei pf:PostConFeedBack, dove (this,pf):pubblica. PF è diverso da vuoto.
+	postcondizioni:
+		- Non ha side effect.
+		- Sia FT = |PF| e sia S la somma dei pf.voto dei pf in PF, m = S/FT.
+		- Sia PFN l'insieme dei pf in PF tali da avere pf.voto <= 2.
+		- Sia FN = |PFN|, z = FN/FT.
+		- result = m*(1-z)/5.

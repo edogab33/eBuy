@@ -1,0 +1,82 @@
+Specifica dello use case Strumenti vendita
+
+pubblica_compralosubito(
+		prezzo: Reale >= 0, 
+		descrizione: Stringa, 
+		anni_g: Intero >= 0, 
+		mp: MetodoDiPagamento,
+		is_nuovo: Booleano,
+		cat: Categoria,
+		condizione: Condizione [0..1]
+	): CompraloSubito
+	precondizioni:
+		- is_nuovo = false se e solo se condizione è valorizzato.
+		- se is_nuovo = true allora anni_g >= 2.
+		- se l'attore che invoca l'operazione è Privato, allora is_nuovo = false.
+	postcondizioni:
+		- Creiamo l'oggetto cs di classe CompraloSubito (cs:CompraloSubito) con:
+			- cs.prezzo = prezzo
+			- cs.anni_garanzia = anni_g
+			- cs.descrizione = descrizione
+			- cs.pubblicazione = adesso
+		- Se is_nuovo = true:
+			- cs è di classe Nuovo (cs:Nuovo)
+		- Altrimenti (is_nuovo = false):
+			- cs è di classe Usato (cs:Usato)
+			- cs.condizione = condizione
+		- Creiamo il link che coinvolge cs e cat "cat_post" (in breve: (cs,cat):cat_post)
+		- Creiamo il link che coinvolge cs e mp "post_met" (in breve: (cs,mp):post_met)
+		- Sia u:Utente
+		- Se is_nuovo = true:
+			- crea il link (cs,u):vend_nuovo
+		- Altrimenti (is_nuovo = false):
+			- creiamo il linl (u,cs):pubblica
+		result = cs
+
+
+// Possiamo unificare la pubblicazione dei post in una singola specifica
+
+pubblica_post(
+				descr: Stringa,
+				anni_g: Intero >= 0,
+				prezzo: Reale >= 0,
+				scadenza: DataOra [0..1],
+				rialzo: Reale > 0 [0..1],
+				metodo_pagamento: MetodoPagamento [1..*],
+				categoria: Categoria,
+				condizioni: Condizioni [0..1],
+				is_nuovo: Booleano,
+				is_asta: Booleano
+			): OggettoDelPost
+	precondizioni:
+		- se is_nuovo = true, deve essere anni_g >= 2
+		- condizioni è valorizzato se e solo se is_nuovo = false
+		- scadenza è valorizzato se e solo se is_asta = true
+		- rialzo è valorizzato se e solo se is_asta = true
+		- scadenza > adesso
+		- Sia up:Utente l'oggetto associato all'attore che ha invocato l'operazione. Se up:Privato, deve essere is_nuovo = false.
+	postcondizioni:
+		- viene creato e restituito l'oggetto p:OggettoDelPost tale che:
+			- p.descrizione = descr
+			- p.anni_garanzia = anni_g
+			- p.pubblicazione = adesso
+			- p.prezzo = prezzo
+			- (categoria,p):cat_post
+			- per ogni m:metodo_pagamento viene creato il link:
+				- (m,p):post_met
+			- se is_nuovo = false:
+				- p:Usato
+					- p.condizione = condizioni
+			- altrimenti (is_nuovo = true):
+				- p:Nuovo
+			- se up:Privato:
+				- (p,up):us_ut
+			- altrimenti (up:VenditoreProf):
+				- (p,up):pubblica
+			- se is_asta = true:
+				- p.scadenza = scadenza
+				- p.prezzo_rialzo = rialzo
+
+
+
+

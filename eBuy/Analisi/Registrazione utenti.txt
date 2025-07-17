@@ -1,0 +1,19 @@
+Specifica dello use case Registrazione utenti
+
+registrazione_privato(u: Stringa): UtentePrivato
+	precondizioni:
+		- non esiste alcun oggetto di classe Utente con valore "u" per l'attributo username.
+	postcondizioni:
+		- viene creato e restituito p:UtentePrivato tale che:
+			- p.username = u
+			- p.registrazione = adesso
+
+
+registrazione_venditore(u: Stringa, l:URL): VenditoreProfessionale
+	precondizioni:
+		- non esiste alcun oggetto di classe Utente con valore "u" per l'attributo username.
+	postcondizioni:
+		- viene creato e restituiro v:VenditoreProfessionale tale che:
+			- v.username = u
+			- v.registrazione = adesso
+			- v.vetrina = l

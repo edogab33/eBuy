@@ -1,0 +1,10 @@
+Specifica della classe Categoria
+
+[V.Categoria.noCicli]
+
+Per ogni c[1],...,c[n]:Categoria dove:
+	- (c[1],c[2]):sottocategoria
+	- (c[2],c[3]):sottocategoria
+	- ...
+	- (c[n-1],c[n]):sottocategoria
+Non può esistere (c[n],c[1]):sottocategoria.

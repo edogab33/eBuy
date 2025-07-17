@@ -1,0 +1,18 @@
+Specifica della classe PostConFeedback
+
+[V.PostConFeedback.postTerminato] Un post può avere un feedback solo quando l'asta è terminata ed ha un vincitore, oppure quando ha un compratore se è CompraSubito.
+
+Per ogni istanza di PostConFeedback
+Se Asta, deve essere che:
+	- è conclusa
+	- esiste almeno un bid
+
+Se CompraSubito, deve essere:
+	- esiste un link d'associazione cs_ut tra il post e un utente qualsiasi
+
+
+Formalmente:
+Per ogni p:PostConFeedback, se p:Asta deve essere che:
+	- a.conclusa() e 
+	- esiste almeno un b:Bid tale che (a,b):asta_bid
+Oppure se p:CompraSubito sia u:UtentePrivato deve essere (c,u):cs_ut.

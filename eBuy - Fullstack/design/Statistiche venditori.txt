@@ -1,0 +1,12 @@
+Specifica dello use case Statistiche venditori
+
+calcola_affidabilita(u:Utente): Reale in 0..1
+	precondizioni: le stesse di u.affidibalita(.)
+	postcondizioni:
+		- result è il valore restituito da u.affidabilita(adesso)
+
+
+calcola_popolarita(u:Utente): Popolarita
+	precondizioni: nessuna.
+	postcondizioni:
+		- result è il valore restituito da u.popolarita(adesso)

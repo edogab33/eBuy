@@ -1,0 +1,70 @@
+Specifica dello use case Strumenti venditori
+
+pubblica_compralosubito(
+	descrizione: Stringa, 
+	prezzo: Reale > 0, 
+	anni_garanzia: Intero >= 0, 
+	condizioni: Condizioni [0..1],
+	categoria: Categoria [1..*]
+	mp: MetodoDiPagamento [1..*]
+) : CompraloSubito
+	precondizioni:
+		- Se condizioni non è valorizzato allora anni_garanzia >= 2.
+	postcondizioni:
+		- Si crea e si restituisce l'oggetto cs:CompraloSubito:
+			- cs.descrizione = descrizione
+			- cs.prezzo = prezzo
+			- cs.anni_garanzia = anni_garanzia
+		- Se condizioni è valorizzato:
+			- si crea cs:Usato
+			- cs.condizioni = condizioni
+		- Altrimenti (condizioni non è valorizzato):
+			- si crea cs:Nuovo
+		- si crea il link (v,cs):pubblica dove v è un oggetto della classe VenditoreProf associato all'attore che invoca l'operazione.
+		- per ogni c in categoria:
+			- si crea il link (c,cs):cat_post
+		per ogni m in mp:
+			- si crea il link (mp,cs):met_post
+
+
+// La pubblicazione dei post può essere unificata in un unica operazione di use-case
+
+pubblica_post(
+				descr: Stringa,
+				anni_g: Intero >= 0,
+				prezzo: Reale >= 0,
+				scadenza: DataOra [0..1],
+				rialzo: Reale > 0 [0..1],
+				metodo_pagamento: MetodoPagamento [1..*],
+				categoria: Categoria [1..*],
+				condizioni: Condizioni [0..1],
+				is_nuovo: Booleano,
+				is_asta: Booleano
+			): OggettoDelPost
+	precondizioni:
+		- se is_nuovo = true, deve essere anni_g >= 2
+		- condizioni è valorizzato se e solo se is_nuovo = false
+		- scadenza è valorizzato se e solo se is_asta = true
+		- rialzo è valorizzato se e solo se is_asta = true
+		- scadenza > adesso
+	postcondizioni:
+		- viene creato e restituito l'oggetto p:OggettoDelPost tale che:
+			- p.descrizione = descr
+			- p.anni_garanzia = anni_g
+			- p.pubblicazione = adesso
+			- p.prezzo = prezzo
+			- per ogni c in categoria:
+				- si crea il link (c,cs):cat_post
+			- per ogni m:metodo_pagamento viene creato il link:
+				- (m,p):met_post
+			- se is_nuovo = false:
+				- p:Usato
+					- p.condizioni = condizioni
+			- altrimenti (is_nuovo = true):
+				- p:Nuovo
+			- crea (p,up):pubblica
+			- se is_asta = true:
+				- p.scadenza = scadenza
+				- p.prezzo_rialzo = rialzo
+
+

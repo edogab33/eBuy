@@ -1,0 +1,51 @@
+Specifica dello use case Strumenti vendita
+
+pubblica_post(
+				descr: Stringa,
+				anni_g: Intero >= 0,
+				prezzo: Reale >= 0,
+				scadenza: DataOra [0..1],
+				rialzo: Reale > 0 [0..1],
+				metodo_pagamento: MetodoPagamento [1..*],
+				categoria: Categoria,
+				condizioni: Condizioni [0..1],
+				is_nuovo: Booleano,
+				is_asta: Booleano
+			): OggettoDelPost
+	precondizioni:
+		- se is_nuovo = true, deve essere anni_g >= 2
+		- condizioni è valorizzato se e solo se is_nuovo = false
+		- scadenza è valorizzato se e solo se is_asta = true
+		- rialzo è valorizzato se e solo se is_asta = true
+		- scadenza > adesso
+		- Sia up:Utente l'oggetto associato all'attore che ha invocato l'operazione. Se up:UtentePrivato, deve essere is_nuovo = false.
+	postcondizioni:
+		- viene creato e restituito l'oggetto p:OggettoDelPost tale che:
+			- p.descrizione = descr
+			- p.anni_garanzia = anni_g
+			- p.pubblicazione = adesso
+			- p.prezzo = prezzo
+			- (categoria,p):cat_ogg
+			- per ogni m:metodo_pagamento viene creato il link:
+				- (m,p):met_post
+			- se is_nuovo = false:
+				- p:Usato
+					- p.condizioni = condizioni
+			- altrimenti (is_nuovo = true):
+				- p:Nuovo
+			- Crea il link (p,up):pubblica
+			- se is_asta = true:
+				- p.scadenza = scadenza
+				- p.prezzo_rialzo = rialzo
+
+
+cancella_post(p:OggettoDelPost):
+	precondizioni:
+		- controllo_cancellazione(p) deve restituire true
+ 	postcondizioni:
+ 		- Sia u l'oggetto associato all'attore che invoca l'operazione
+ 		- il link (p,u):pubblica viene eliminato dal sistema
+		- l'oggetto p viene eliminato dal sistema
+
+
+

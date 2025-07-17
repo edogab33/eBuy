@@ -1,0 +1,37 @@
+Specifica dello use case Strumenti acquisto
+
+compralo_subito(p:CompraloSubito)
+	precondizioni:
+		- non esiste u:Privato tale che (p,u):cs_ut
+	postcondizioni:
+		- Sia u:Privato l'oggetto associato all'attore che invoca l'operazione, viene creato il link (p,u):cs_ut.
+
+
+crea_bid(p:Asta): Bid
+	precondizioni:
+		- adesso < p.scadenza
+		- non esiste un b:Bid tale che b.istante = adesso e (p,b):asta_bid (bid non contemporanei)
+	postcondizioni:
+		- Sia u:Privato l'oggetto associato all'attore che invoca l'operazione
+		- Vengono creati i seguenti link/oggetti:
+			- b:Bid tale che:
+				- b.istante = adesso
+			- (p,b):asta_bid
+			- (b,u):bid_ut
+		- result = b
+
+
+lascia_feedback(p:PostOggetto, v: Intero in 0..5, c: Stringa[0..1])
+	precondizioni:
+		- Sia u:Privato l'oggetto associato all'attore che invoca l'operazione
+		- Se p:Asta:
+			- il risultato dell'operazione p.vincitore() deve essere uguale a u
+		- Se p:CompraloSubito:
+			- deve esistere (p,u):cs_ut
+	postcondizioni:
+		- p diventa p:PostConFeedback
+		- p.voto = v
+		- p.commento = c (se valorizzato)
+		- p.istante = adesso
+
+

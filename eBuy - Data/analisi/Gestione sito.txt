@@ -1,0 +1,27 @@
+Specifica dello use case Gestione sito
+
+crea_categoria(nome: Stringa, padre: Categoria[0..1]): Categoria
+	precondizioni: non esiste c:Categoria tale che c.nome = nome
+	postcondizioni:
+		- crea l'oggetto c:Categoria tale che:
+			- c.nome = nome
+			- (padre,c):sottocategoria (se padre è valorizzato)
+		- result = c
+
+
+crea_metodo_pagamento(nome: Stringa): MetodoPagamento
+	precondizioni: non esiste m:MetodoPagamento tale che m.nome = nome
+	postcondizioni:
+		- crea l'oggetto m:MetodoPagamento tale che:
+			- m.nome = nome
+		- result = m
+
+
+cancella_post(p:OggettoDelPost)
+	precondizioni:
+		- controllo_cancellazione(p) deve restituire true
+	postcondizioni:
+		- sia u:Utente l'oggetto coinvolto in (p,u):pubblica oppure in (p,u):us_ut
+		- Vengono eliminati dal sistema (p,u):pubblica oppure (p,u):us_ut e p
+
+

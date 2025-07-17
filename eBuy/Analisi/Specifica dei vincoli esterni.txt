@@ -1,0 +1,22 @@
+Specifica dei vincoli esterni
+
+
+[V.Utente.registrDopoPubblicazione] Un utente non può pubblicare post prima della sua registrazione.
+
+Per ogni u:Utente, sia o:OggettoDelPost tale che (u,o):pubblica, deve essere o.pubblicazione > u.registrazione.
+
+
+[V.UtentePrivato.selfAcquisto] Gli utenti privati non possono acquistare oggetti venduti da loro in modalita CompraSubito.
+
+Per ogni u:UtentePrivato sia p:Usato tale che (u,p):pubblica e p:CompraSubito, non deve esistere (u,p):cs_ut.
+
+
+[V.UtentePrivato.selfBid] Gli utenti privati non possono fare bid sulle aste pubblicate da loro.
+
+Per ogni u:UtentePrivato sia p:Usato e b:Bid tale che (u,p):pubblica, p:Asta e esiste (p,b):asta_bid, non deve essere (b,p):bid_ut.
+
+
+[V.cs_utCompraloSubito.acquistoDopoPubblicazione] L'istante di acquisto in modalita compralo subito deve essere maggiore della sua pubblicazione.
+
+Per ogni istanza "cs" della classe CompraSubito esiste l'istanza del link cs_ut dove "cs" partecipa, deve essere vero che il valore dell'attributo pubblicazione di cs è minore al valore dell'attributo istante di cs_ut.
+

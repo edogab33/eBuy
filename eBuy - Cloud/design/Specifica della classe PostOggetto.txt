@@ -1,0 +1,5 @@
+Specifica della classe PostOggetto
+
+[V.PostOggetto.anni_garanzia_post_fusione] Se PostOggetto è Nuovo, gli anni di garanzia devono essere >= 2.
+
+Sia po:PostOggetto tale che is_nuovo = true allora anni_garanzia >= 2.

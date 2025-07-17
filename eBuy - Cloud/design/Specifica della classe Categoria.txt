@@ -1,0 +1,14 @@
+Specifica della classe Categoria
+
+[V.Categoria.noCicli] Le sottocategorie non possono formare dei cicli.
+
+Sia c[0]...c[n]:Categoria tale che:
+	- (c[0],c[1]):sottocategoria
+	- (c[1],c[2]):sottocategoria
+	...
+	- (c[n-1],c[n]):sottocategoria
+Non può essere che (c[n],c[0]):sottocategoria.
+
+E
+
+Non esiste c:Categoria tale che c':Categoria dove c = c' e (c,c'):sottocategoria.

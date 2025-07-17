@@ -1,0 +1,9 @@
+Specifica delle operazioni ausiliarie
+
+controllo_cancellazione(p:OggettoDelPost): Booleano
+	precondizioni: nessuna
+	postcondizioni:
+		- Il valore di ritorno "result" è true quando le seguenti condizioni sono soddisfatte:
+			- se p:Asta, non deve esistere un b:Bid tale che (p,b):asta_bid (non ci sono già bid)
+			- se p:CompraloSubito, non deve esistere up:UtentePrivato tale che (p,up):cs_ut (non è stato già acquistato)
+		- Altrimenti result è false.

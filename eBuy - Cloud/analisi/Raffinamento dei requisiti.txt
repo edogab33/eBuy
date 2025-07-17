@@ -1,0 +1,72 @@
+Raffinamento dei requisiti
+
+1. Degli utenti interessa:
+	1.1. Username (univoco)
+	1.2. Istante di registrazione (DataOra)
+	1.3. I post che hanno pubblicato (v.req. 3)
+	1.4. I post CompraSubito che hanno acquistato (v.req. 3.5.)
+	1.5. Le aste a cui hanno inviato bid (v.req. 3.4)
+	1.6. Se sono utenti privati:
+		1.6.1. I bid proposti (v.req. 4)
+		1.6.2. E gli oggetti acquistati in modalita "compralo subito" (v.req. 3.5)
+	1.7. Se sono venditori professionali:
+		1.7.1. I loro post (v.req. 3)
+		1.7.2. La URL della loro vetrina
+		1.7.3. La popolarita calcolata come:
+			- La somma tra il numero di utenti che hanno fatto bid ai loro post e il numero di utenti che hanno acquistato in modalita "compralo subito" (tutto negli ultimi 12 mesi)
+			- Se < 50 è bassa
+			- Se è tra 50 e 300 è media
+			- Se > 300 è alta
+		1.7.4. L'affidabilita, calcolata:
+			- m*(1-z)/5
+			- "m" è la media artimetica di tutti i feedback ricevuti
+			- z = FN/FT, dove FN è il numero di feedback negativi e FT è il numero di feedback totali
+			- I feedback negativi sono quelli che hanno voto <= 2
+
+2. Degli oggetti in vendita interessa:
+	2.1. Se nuovo:
+		2.1.1. Il numero di anni di garanzia (minimo 2)
+	2.2. Se usato:
+		2.2.1. Il numero di anni di garanzia (minimo 0)
+		2.2.2. Le condizioni (ottimo, buono, discreto, da sistemare)
+
+3. Dei post ci interessa:
+	3.1. Descrizione
+	3.2. Delle categorie interessa:
+		3.2.1. Le sottocategorie
+		3.2.2. Calcolare le dirette sottocategorie
+	3.3. Metodi di pagamento (bonifico o carta di credito)
+	3.4. Se è un'asta interessa:
+		3.4.1. Prezzo iniziale (reale >= 0)
+		3.4.2. Prezzo dei rialzi (reale > 0)
+		3.4.3. Scadenza (DataOra)
+		3.4.4. I bid (v.req. 4)
+		3.4.5. Il prezzo in un dato momento (calcolabile)
+		3.4.6. L'ultimo bid (v.req. 4)
+		3.4.7. L'utente che si è aggiudicato l'asta (v.req. 1)
+	3.5. Se è "Compralo Subito":
+		3.5.1. Prezzo di vendita (reale > 0)
+		3.5.2. L'acquirente (v.req. 1), cioè colui che ha acquistato per primo
+	3.6. L'utente che l'ha pubblicato (v.req. 1)
+	3.7. L'oggetto (v.req. 2)
+	3.8. I feedback di cui interessa:
+		3.8.1. Il voto (intero tra 0 e 5)
+		3.8.2. Un commento testuale (opzionale)
+
+4. Dei bid ci interessa:
+	4.1. Istante (DataOra)
+	4.2. Il bidder (v.req. 1)
+
+
+999. Il sistema deve permettere:
+	x999.1. Ai venditori di pubbliare post per oggetti in vendita con o senza asta.
+	x999.2. Ai privati di proporre un nuovo bid per un oggetto in vendita tramite asta.
+	x999.3. Ai privati di procedere all’acquisto di un oggetto messo in vendita con la modalità “compralo subito”.
+	x999.4. Agli ospiti di registrarsi come venditori professionali o utenti privati.
+	x999.5. Ai privati di lasciare feedback a post acquistati in modalita "Compralo Subito" o ad aste aggiudicate.
+	x999.6. Agli amministratori di creare nuove categorie.
+	x999.7. Agli amministratori di creare nuovi metodi di pagamento.
+	x999.8. Ai venditori di cancellare i loro post.
+	x999.9. Ai moderatori di cancellare qualsiasi post.
+	x999.10. Calcolare la popolarita.
+	x999.11. Calcolare l'affidibalita.

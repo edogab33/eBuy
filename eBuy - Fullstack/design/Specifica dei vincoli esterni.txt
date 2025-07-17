@@ -1,0 +1,56 @@
+Specifica dei vincoli esterni
+
+[V.VenditoreProfPost.pubblicazioneDopoRegistrazione] Un venditore professionale non può pubblicare post prima di essere registrato.
+
+Non possono esistere venditori professionali che hanno pubblicato post prima della registrazione. (informale)
+
+Non possono esistere istanze u di VenditoreProf e istanze p di PostOggetto tali che u e p sono coinvolti in un link d'associazione "pubblica" e u.registrazione > p.pubblicazione. (formale a voce)
+
+Non esiste u:VenditoreProf e p:PostOggetto tali che (u,p):pubblica e u.registrazione > p.pubblicazione. (formale scritta)
+
+Per ogni u:VenditoreProf sia p:PostOggetto tale che (u,p):pubblica deve essere u.registrazione < p.pubblicazione. (formale, versione alternativa)
+
+
+[V.PrivatoCompraloSubito.nonSelfAcquisto] Gli utenti privati non possono acquistare oggetti venduti da loro in modalita "CompraloSubito".
+
+Non esiste u:Privato e p:OggettoUsato, p:CompraloSubito tale che (u,p):priv_ou e (u,p):cs_ut. (p:CompraloSubito può essere rimosso perché implicito nel fatto che solo istanze di CompraloSubito possono avere link d'associazione cs_ut)
+
+Non esiste u:Privato e p:OggettoUsato tale che (u,p):priv_ou e (u,p):cs_ut.
+
+
+[V.PrivatoBid.bidDopoRegistrazione] Un privato non può avere bid prima di essere registrato.
+
+Per ogni u:Privato sia b:Bid tale che (b,u):bid_ut deve essere u.registrazione < b.istante.
+
+
+[V.PrivatoBid.nonSelfBid] Gli utenti privati non possono fare bid sulle aste pubblicate da loro. (per casa)
+
+
+[V.cs_utCompraloSubito.acquistoDopoPubblicazione] L'istante di acquisto di un post in modalità "compralo subito" deve essere successivo alla pubblicazione del post.
+
+Per ogni c:CompraloSubito e p:Privato coinvolti in un link (c,p):cs_ut deve essere vero c.pubblicazione <= (c,p).istante.
+
+Informale:
+Per ogni c istanza di CompraloSubito e p istanza di Privato coinvolti in un link di associazione cs_ut, deve essere vero che l'istante di pubblicazione di c è minore o uguale a l'istante di cs_ut.
+
+
+[V.PostConFeedbackPrivato.feedbackLegale] I feedback dei post possono essere dati solo dopo che il post è stato acquistato in modalità "compralo subito" oppure se l'asta è terminata e ha un vincitore (cioè, almeno un bid).
+
+Non puo esistere f:PostConFeedback che è anche istanza di CompraloSubito se non c'è un p:Privato coinvolto in un link (f,p):cs_ut.
+Inoltre, se f è istanza di Asta, deve essere vero che:
+	- f.scadenza > adesso
+	- esiste almeno un b:Bid tale che (b,f):asta_bid
+
+Formale:
+Per ogni f:PostConFeedback:
+	- Se f:CompraloSubito, sia p:Privato, deve esistere (f,p):cs_ut.
+	- Se f:Asta:
+		- conclusa()
+		- esiste b:Bid tale che (b,f):asta_bid
+
+
+
+
+
+
+
