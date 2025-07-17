@@ -29,12 +29,14 @@ conclusa(): Booleano
 		- Altrimenti result è flase.
 
 
-ultimo_bid(): Bid[0..1]
-	precondizioni: nessuna.
-	postcondizioni:
-		- Non ha side effect
-		- Sia B l'insieme dei b:Bid coinvolti in un link asta_bid di associazione tra b e this, prendo solo i b.istante <= adesso.
-		- result è il bid nell'insieme B con valore dell'attributo istante maggiore.
+ultimo_bid(): Bid | None
+	max_b = this.asta_bid.bid[0]
+
+	per ogni l in this.asta_bid:
+		se l.bid.istante > max_b.istante:
+			max_b = l.bid
+
+	return max_b
 
 
 vincitore(): Privato[0..1]

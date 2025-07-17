@@ -131,8 +131,11 @@ class Asta(OggettoDelPost):
         return self._prezzo_rialzo
         
     def ultimo_bid(self) -> Bid:
-        bids = [self._bids[b] for b in self._bids]
-        return max(bids, key=lambda b: b.bid().istante()).bid()
+        max_b = self._bids[list(self._bids.keys())[0]]
+        for l in self._bids.values():
+            if l.bid().istante() > max_b.istante():
+                max_b = l.bid()
+        return max_b
     
     def vincitore(self) -> UtentePrivato:
         ultimo_bid = self.ultimo_bid()
