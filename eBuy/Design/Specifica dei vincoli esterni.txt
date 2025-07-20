@@ -31,3 +31,7 @@ Per ogni o:OggettoDelPost, deve essere:
 Per ogni o:OggettoDelPost esiste f:Feedback tale che (f,o):feed_post solo se:
 	- o.conclusa() e esiste almeno un b:Bid tale che (o,b):asta_bid, oppure
 	- sia u:UtentePrivato, esiste (o,u):cs_ut.
+
+
+[V.UtentePostOggetto.is_nuovo_dopo_fusione]
+Sia p:PostOggetto con p.is_nuovo = True, tale che (p,v):pubblica dove v:Utente, deve essere che v:VenditoreProf.
