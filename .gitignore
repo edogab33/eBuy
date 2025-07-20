@@ -203,5 +203,5 @@ __marimo__/
 .streamlit/secrets.toml
 
 .DS_Store
-# Ignore Visual Paradigm backup files
-.vpp.bak
+# Ignore Visual Paradigm files but .vpp
+*.vpp.*
