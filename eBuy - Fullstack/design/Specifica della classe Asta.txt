@@ -21,12 +21,10 @@ prezzo(i: DataOra): Reale >= 0
 		- result = N * this.prezzo_bid + this.prezzo
 
 
-conclusa(): Booleano
-	precondizioni: nessuna.
-	postcondizioni:
-		- Non ha side effect.
-		- Se this.scadenza <= adesso result è true.
-		- Altrimenti result è flase.
+conclusa(): bool
+	se this.scadenza <= datetime.now():
+		return True
+	return False
 
 
 ultimo_bid(): Bid | None
@@ -39,12 +37,11 @@ ultimo_bid(): Bid | None
 	return max_b
 
 
-vincitore(): Privato[0..1]
-	precondizioni: il risultato dell'operazione this.conclusa() deve essere true.
-	postcondizioni:
-		- Non ha side effect.
-		- b = this.ultimo_bid()
-		- result è p:Privato coinvolto nel link bid_ut di associazione con b.
+vincitore(): Privato | None
+	se this.conclusa() == False: 
+		return None
+	b = this.ultimo_bid()
+	return b.bid_ut.privato
 
 
 

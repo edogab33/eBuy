@@ -137,7 +137,14 @@ class Asta(OggettoDelPost):
                 max_b = l.bid()
         return max_b
     
+    def conclusa(self) -> bool:
+        if self.scadenza() <= datetime.now():
+            return True
+        return False
+    
     def vincitore(self) -> UtentePrivato:
+        if not self.conclusa():
+            raise ValueError("L'asta non è conclusa.")
         ultimo_bid = self.ultimo_bid()
         return ultimo_bid._bid_ut_link.utente_privato()
      
