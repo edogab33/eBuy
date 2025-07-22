@@ -1,11 +1,12 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, Self
 from abc import ABC, abstractmethod
-from py.custom_types.integers import IntGEZ
+from py.custom_types.integers import IntGEZ, IntGET
 from py.custom_types.floats import FloatGEZ, FloatGZ
 from py.custom_types.enums import Condizioni
 
 if TYPE_CHECKING:
+    from py.classes.Index import Index
     from py.classes.Bid import Bid
     from py.classes.asta_bid import asta_bid
 
@@ -19,13 +20,15 @@ class OggettoDelPost(ABC):
     _prezzo: FloatGEZ
     _is_nuovo: bool
     _condizioni: Condizioni
+    _index:Index[int,Self] = Index[int,Self]('OggettoDelPost')
     
     @abstractmethod
     def __init__(self, 
                  descrizione: str, 
                  anni_garanzia: IntGEZ, 
                  prezzo: FloatGEZ, 
-                 is_nuovo: bool, 
+                 is_nuovo: bool,
+                 id: int,
                  condizioni: Condizioni = None
     ) -> None:
         self.set_descrizione(descrizione)
@@ -33,12 +36,34 @@ class OggettoDelPost(ABC):
         self._pubblicazione = datetime.datetime.now()
         self.set_prezzo(prezzo)
         self.set_is_nuovo(is_nuovo)
-        self.set_condizioni(condizioni)
+        if condizioni:
+            self.set_condizioni(condizioni)
+        self._set_id()
+            
+    @classmethod
+    def all(cls):
+        return cls._index.all()
     
-    def set_descrizione(self, descrizione:str) -> None:
+    @classmethod
+    def get(cls, key:Any)->Self|None:
+        return cls._index.get(key)
+    
+    def _set_id(self) -> None:
+        key_list = list(self._index.all_keys())
+        if len(key_list) > 0:
+            last_id = max(key_list)
+            id = last_id + 1
+        else:
+            id = 0
+        self._index.add(id, self)
+        self._id = id
+    
+    def set_descrizione(self, descrizione: str) -> None:
         self._descrizione = descrizione
         
     def set_anni_garanzia(self, anni_garanzia: IntGEZ) -> None:
+        if self.is_nuovo():
+            anni_garanzia = IntGET(anni_garanzia)
         self._anni_garanzia = anni_garanzia
         
     def set_prezzo(self, prezzo: FloatGEZ) -> None:
@@ -48,6 +73,8 @@ class OggettoDelPost(ABC):
         self._is_nuovo = is_nuovo
         
     def set_condizioni(self, condizioni: Condizioni) -> None:
+        if self.is_nuovo():
+            raise ValueError("Non si può impostare le condizioni se l'oggetto è nuovo.")
         self._condizioni = condizioni
         
     def descrizione(self) -> str:
@@ -67,6 +94,9 @@ class OggettoDelPost(ABC):
     
     def condizioni(self) -> Condizioni:
         return self._condizioni
+
+    def id(self) -> int:
+        return self._id
     
     def __repr__(self) -> str:
         return f"OggettoDelPost(descrizione={self.descrizione()},\n \
@@ -98,22 +128,44 @@ class Asta(OggettoDelPost):
                        is_nuovo,
                        condizioni
                        )
-        self.set_anni_garanzia(anni_garanzia)
-        self.set_descrizione(descrizione)
         self.set_prezzo_rialzo(prezzo_rialzo)
         self.set_scadenza(scadenza)
     
     def set_prezzo_rialzo(self, p: FloatGZ) -> None:
         # a evoluzione controllata
+        self.__check_bids()
         self._prezzo_rialzo = p
     
     def set_scadenza(self, s: datetime) -> None:
         # a evoluzione controllata
+        self.__check_bids()
+        if self.scadenza() < self.pubblicazione():
+            raise ValueError("Scadenza deve essere maggiore della pubblicazione.")
         self._scadenza = s
     
-    def add_bid(self, u:UtentePrivato) -> None:
-        from py.classes.Bid import Bid
-        Bid(asta=self, up=u)
+    def set_descrizione(self, descrizione: str) -> None:
+        self.__check_bids()
+        super().set_descrizione(descrizione)
+        
+    def set_anni_garanzia(self, anni_garanzia: IntGEZ) -> None:
+        self.__check_bids()
+        super().set_anni_garanzia(anni_garanzia)
+        
+    def set_prezzo(self, prezzo: FloatGEZ) -> None:
+        self.__check_bids()
+        super().set_prezzo(prezzo)
+        
+    def set_is_nuovo(self, is_nuovo: bool) -> None:
+        self.__check_bids()
+        super().set_is_nuovo(is_nuovo)
+        
+    def set_condizioni(self, condizioni: Condizioni) -> None:
+        self.__check_bids()
+        super().set_condizioni(condizioni)
+        
+    def __check_bids(self) -> None:
+         if self._bids:
+            raise ValueError("L'asta non è modificabile dopo aver ricevuto un bid.")       
         
     def _add_asta_bid(self, l: asta_bid) -> None:
         if l.asta() is not self:
@@ -130,13 +182,26 @@ class Asta(OggettoDelPost):
     def prezzo_rialzo(self) -> FloatGEZ:
         return self._prezzo_rialzo
         
-    def ultimo_bid(self) -> Bid:
-        bids = [self._bids[b] for b in self._bids]
-        return max(bids, key=lambda b: b.bid().istante()).bid()
+    def ultimo_bid(self, i: datetime) -> Bid | None:
+        max_b: Bid | None = None
+        for l in self._bids.values():
+            if l.bid().istante() <= i:
+                if not max_b:
+                    max_b = l.bid()
+                else:
+                    if l.bid().istante() > max_b.istante():
+                        max_b = l.bid()
+        return max_b
     
-    def vincitore(self) -> UtentePrivato:
-        ultimo_bid = self.ultimo_bid()
-        return ultimo_bid._bid_ut_link.utente_privato()
+    def conclusa(self) -> bool:
+        if self.scadenza() <= datetime.now():
+            return True
+        return False
+    
+    def vincitore(self) -> UtentePrivato | None:
+        if not self.conclusa:
+            return None
+        return self.ultimo_bid(datetime.now()).bid_ut().utente_privato()
      
     def __repr__(self):
         return f"Asta(OggettoDelPost = {super().__repr__()},\n " \

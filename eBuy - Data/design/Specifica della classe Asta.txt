@@ -35,8 +35,17 @@ ultimo_bid(i: datetime): Bid | None
 
 	return max_b
 
-# versione ottimizzata (per casa)
-[...]
+# versione ottimizzata
+ultimo_bid(i: datetime): Bid | None
+	max_b = None
+	per ogni l in this.asta_bid:
+		se l.bid.istante <= i:
+			se max_b == None:
+				max_b = l.bid
+			altrimenti:
+				se l.bid.istante > max_b.istante:
+					max_b = l.bid
+	return max_b
 
 
 conclusa(): bool
