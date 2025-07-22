@@ -1,7 +1,7 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
 from abc import ABC, abstractmethod
-from py.custom_types.integers import IntGEZ
+from py.custom_types.integers import IntGEZ, IntGET
 from py.custom_types.floats import FloatGEZ, FloatGZ
 from py.custom_types.enums import Condizioni
 
@@ -29,20 +29,23 @@ class OggettoDelPost(ABC):
                  condizioni: Condizioni = None
     ) -> None:
         self.set_descrizione(descrizione)
+        self.set_is_nuovo(is_nuovo)
         self.set_anni_garanzia(anni_garanzia)
         self._pubblicazione = datetime.datetime.now()
-        self.set_prezzo(prezzo)
-        self.set_is_nuovo(is_nuovo)
+        self._prezzo = prezzo
         self.set_condizioni(condizioni)
     
     def set_descrizione(self, descrizione:str) -> None:
         self._descrizione = descrizione
         
     def set_anni_garanzia(self, anni_garanzia: IntGEZ) -> None:
-        self._anni_garanzia = anni_garanzia
+        n = IntGEZ(anni_garanzia)
+        if self.is_nuovo():
+            n = IntGET(anni_garanzia)
+        self._anni_garanzia = n
         
-    def set_prezzo(self, prezzo: FloatGEZ) -> None:
-        self._prezzo = prezzo
+    #def set_prezzo(self, prezzo: FloatGEZ) -> None:
+    #    self._prezzo = FloatGEZ(prezzo)
         
     def set_is_nuovo(self, is_nuovo: bool) -> None:
         self._is_nuovo = is_nuovo
@@ -59,6 +62,7 @@ class OggettoDelPost(ABC):
     def pubblicazione(self) -> datetime:
         return self._pubblicazione
     
+    @property
     def prezzo(self) -> FloatGEZ:
         return self._prezzo
     
@@ -72,7 +76,7 @@ class OggettoDelPost(ABC):
         return f"OggettoDelPost(descrizione={self.descrizione()},\n \
                 anni_garanzia={self.anni_garanzia()},\n \
                 pubblicazione={self.pubblicazione()},\n \
-                prezzo={self.prezzo()}, is_nuovo={self.is_nuovo()},\n \
+                prezzo={self.prezzo}, is_nuovo={self.is_nuovo()},\n \
                 condizioni={self.condizioni()})"
         
         
@@ -87,7 +91,7 @@ class Asta(OggettoDelPost):
                  anni_garanzia: IntGEZ, 
                  prezzo: FloatGEZ, 
                  is_nuovo: bool, 
-                 condizioni: Condizioni = None,
+                 condizioni: Condizioni | None = None,
                  scadenza: datetime,
                  prezzo_rialzo: FloatGEZ
     ) -> None:
@@ -98,17 +102,19 @@ class Asta(OggettoDelPost):
                        is_nuovo,
                        condizioni
                        )
-        self.set_anni_garanzia(anni_garanzia)
-        self.set_descrizione(descrizione)
         self.set_prezzo_rialzo(prezzo_rialzo)
         self.set_scadenza(scadenza)
     
     def set_prezzo_rialzo(self, p: FloatGZ) -> None:
         # a evoluzione controllata
-        self._prezzo_rialzo = p
+        if self._bids:
+            raise ValueError("L'asta non può essere modificata dopo aver ricevuto un bid.")
+        self._prezzo_rialzo = FloatGZ(p)
     
     def set_scadenza(self, s: datetime) -> None:
         # a evoluzione controllata
+        if self._bids:
+            raise ValueError("L'asta non può essere modificata dopo aver ricevuto un bid.")
         self._scadenza = s
     
     def add_bid(self, u:UtentePrivato) -> None:
@@ -149,7 +155,7 @@ if __name__ == "__main__":
     
     a = Asta(
         descrizione="Test",
-        anni_garanzia=IntGEZ(1),
+        anni_garanzia=IntGEZ(2),
         prezzo=FloatGEZ(10.0),
         is_nuovo=True,
         scadenza=datetime.datetime.now(),

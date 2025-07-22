@@ -7,11 +7,11 @@ class IntGEZ(int):
         return int.__new__(cls, v)
     
     
-class IntGET(int):
+class IntGET(IntGEZ):
     def __new__(cls, v:int|float|Self) -> Self:
         if v < 2:
             raise ValueError(f"Il valore di {v} deve essere >= 2.")
-        return int.__new__(cls, v)
+        return IntGEZ.__new__(cls, v)
     
     
 class Voto(int):
