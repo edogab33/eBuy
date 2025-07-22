@@ -106,15 +106,32 @@ class Asta(OggettoDelPost):
     
     def set_prezzo_rialzo(self, p: FloatGZ) -> None:
         # a evoluzione controllata
-        if self._bids:
-            raise ValueError("L'asta non può essere modificata dopo aver ricevuto un bid.")
+        self.__check_bids()
         self._prezzo_rialzo = FloatGZ(p)
     
     def set_scadenza(self, s: datetime) -> None:
-        # a evoluzione controllata
-        if self._bids:
-            raise ValueError("L'asta non può essere modificata dopo aver ricevuto un bid.")
+        self.__check_bids()
         self._scadenza = s
+        
+    def set_descrizione(self, descrizione:str) -> None:
+        self.__check_bids()
+        super().set_descrizione(descrizione)
+        
+    def set_anni_garanzia(self, anni_garanzia: IntGEZ) -> None:
+        self.__check_bids()
+        super().set_anni_garanzia(anni_garanzia)
+        
+    def set_prezzo(self, prezzo: FloatGEZ) -> None:
+        self.__check_bids()
+        super().set_anni_garanzia(prezzo)
+        
+    def set_is_nuovo(self, is_nuovo: bool) -> None:
+        self.__check_bids()
+        super().set_anni_garanzia(is_nuovo)
+        
+    def set_condizioni(self, condizioni: Condizioni) -> None:
+        self.__check_bids()
+        super().set_anni_garanzia(condizioni)
     
     def add_bid(self, u:UtentePrivato) -> None:
         from py.classes.Bid import Bid
@@ -159,6 +176,17 @@ class Asta(OggettoDelPost):
         if self.scadenza() < i:
             return True
         return False
+    
+    def prezzo(self, i: datetime) -> FloatGEZ:
+        B = []
+        for l in self.asta_bid:
+            if l.bid().istante() <= i:
+                B.append(l.bid())
+        return self.prezzo() + len(B) * self.prezzo_rialzo()
+    
+    def __check_bids(self) -> None:
+        if self._bids:
+            raise ValueError("L'asta non può essere modificata dopo aver ricevuto un bid.")
      
     def __repr__(self):
         return f"Asta(OggettoDelPost = {super().__repr__()},\n " \

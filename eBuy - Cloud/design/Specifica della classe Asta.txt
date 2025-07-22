@@ -11,14 +11,13 @@ Equivalentemente:
 Non esiste a:Asta tale che a.pubblicazione > a.scadenza.
 
 
-prezzo(i: DataOra): Reale >= 0
-	precondizioni: nessuna.
-	postcondizioni:
-		- L'operazione non modifica il livello estensionale dei dati
-		- Sia B l'insieme dei bid fatti a this fino ad i, formalmente:
-			B è l'insieme dei b:Bid tali che (this,b):asta_bid e b.istante <= i.
-		- Sia N il numero di elementi di B (formalmente, la cardinalità, |B|).
-		- result = this.prezzo + N * this.prezzo_bid
+prezzo(i: datetime): FloatGEZ
+	B = {}
+	per ogni l in this.asta_bid:
+		se l.bid.istante <= i:
+			B.add(l.bid)
+	N = |B|
+	return this.prezzo + N * this.prezzo_bid
 
 # traduzione 1 ad 1 della specifica di analisi
 ultimo_bid(i: datetime): Bid | None
