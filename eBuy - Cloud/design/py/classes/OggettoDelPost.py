@@ -135,13 +135,30 @@ class Asta(OggettoDelPost):
     def prezzo_rialzo(self) -> FloatGEZ:
         return self._prezzo_rialzo
         
-    def ultimo_bid(self) -> Bid:
-        bids = [self._bids[b] for b in self._bids]
-        return max(bids, key=lambda b: b.bid().istante()).bid()
+    def ultimo_bid(self) -> Bid | None:
+        if not self._bids: return None
+        max_b = None
+        for l in self._bids.values():
+            if l.bid().istante() <= datetime.now():
+                if max_b == None:
+                    max_b = l.bid()
+                else:
+                    if l.bid().istante() > max_b.istante():
+                        max_b = l.bid()
+        return max_b
+        
+    def vincitore(self) -> UtentePrivato | None:
+        if not self.scaduta(datetime.now()):
+            return None
+        b = self.ultimo_bid(datetime.now())
+        if b == None:
+            return None
+        return b.bid_ut().utente_privato()
     
-    def vincitore(self) -> UtentePrivato:
-        ultimo_bid = self.ultimo_bid()
-        return ultimo_bid._bid_ut_link.utente_privato()
+    def scaduta(self, i: datetime) -> bool:
+        if self.scadenza() < i:
+            return True
+        return False
      
     def __repr__(self):
         return f"Asta(OggettoDelPost = {super().__repr__()},\n " \

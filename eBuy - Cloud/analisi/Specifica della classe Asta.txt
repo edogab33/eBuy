@@ -30,4 +30,17 @@ ultimo_bid(i: DataOra): Bid[0..1]
 			result è definito come il b' in B tale che non esiste un b'' dove b'.istante < b''.istante.
 
 
+vincitore(): Privato[0..1]
+	precondizioni:
+		- this.scaduta(adesso) deve essere vera.
+	postcondizioni:
+		- Sia b il risultato dell'operazione ultimo_bid(adesso)
+		- se b è vuoto, result è vuoto
+		- result è il p:Privato coinvolto nel link (b,p):bid_ut
 
+
+scaduta(i: DataOra): Booleano
+	precondizioni: nessuna
+	postcondizioni:
+		- result è true se this.scadenza < i
+		- altrimenti è false

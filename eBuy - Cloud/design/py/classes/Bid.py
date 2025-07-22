@@ -22,6 +22,9 @@ class Bid:
     def istante(self) -> datetime:
         return self._istante
     
+    def bid_ut(self) -> bid_ut:
+        return self._bid_ut_link
+    
     def _add_link_asta_bid(self, asta: Asta) -> None:
         l = asta_bid._link(asta, self)
         self._asta_bid_link = l

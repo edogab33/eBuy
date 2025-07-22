@@ -35,4 +35,29 @@ ultimo_bid(i: datetime): Bid | None
 
 	return max_b
 
+# versione ottimizzata
+ultimo_bid(i: datetime): Bid | None
+	se |this.asta_bid| == 0: return None
+	max_b = None
+	per ogni l in this.asta_bid:
+		se l.bid.istante <= i:
+			se max_b == None:
+				max_b = l.bid
+			altrimenti:
+				se l.bid.istante > max_b.istante
+					max_b = l.bid
+	return max_b
 
+
+vincitore(): Privato | None
+	se this.scaduta(datetime.now()) == False:
+		return None
+	b = this.ultimo_bid(datetime.now())
+	se b == None: return None
+	altrimenti:
+		return b.bid_ut.privato
+
+
+scaduta(i: datetime): bool
+	se this.scadenza < i: return True
+	return False
